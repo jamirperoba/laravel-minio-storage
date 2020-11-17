@@ -65,18 +65,45 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            <form action="{{ route('send-file') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('storage.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="file" name="file">
                 <button type="submit">Enviar</button>
             </form>
             <div>
-                @isset($files)
+                <span>Folder 1</span>
+                @isset($folders)
                 <ul>
-                    @foreach($files as $file)
-                    <li>{{ $file }}</li>
+                    @foreach($folders['folder1'] as $file)
+                    <li>
+                        {{ $file }}
+                        <form action="{{ route('storage.destroy') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="_method" value="delete">
+                            <input type="hidden" name="path" value="{{ $file }}">
+                            <button type="submit">x</button>
+                        </form>
+                        <form action="{{ route('storage.update') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="_method" value="put">
+                            <input type="hidden" name="path" value="{{ $file }}">
+                            <button type="submit">-></button>
+                        </form>
+                        <a href="{{ route('storage.get-metadata',['path' => $file]) }}">metadata</a>
+                    </li>
                     @endforeach
                 </ul>
+                @endisset
+            </div>
+            <br>
+            <div>
+                <span>Folder 2</span>
+                @isset($folders)
+                    <ul>
+                        @foreach($folders['folder2'] as $file)
+                            <li>{{ $file }}</li>
+                        @endforeach
+                    </ul>
                 @endisset
             </div>
         </div>

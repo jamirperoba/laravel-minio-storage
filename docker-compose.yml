@@ -24,6 +24,8 @@ services:
       - minio_data_1_2:/data2
     networks:
       - network-test
+    ports:
+    - "9002:9000"
     expose:
       - "9000"
     environment:

@@ -1,9 +1,5 @@
 <?php
-
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,18 +12,13 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::get('/', function () {
-    $files  = Storage::cloud()->allFiles('test');
-    return view('welcome')->with(['files' => $files]);
+Route::get('/', function (){
+    return redirect()->route('storage.index');
 })->name('home');
 
-Route::post('/', function (Request $request) {
-    $file = $request->file('file');
-
-    $file_extension=$file->extension();
-    $filename = time() . '.' . $file_extension;
-
-    Storage::cloud()->put('test/' . $filename, (string) file_get_contents($file), 'public');
-    return redirect()->route('home');
-})->name('send-file');
+Route::get('/storage', 'StorageController@index')->name('storage.index');
+Route::post('/storage', 'StorageController@store')->name('storage.store');
+Route::delete('/storage', 'StorageController@destroy')->name('storage.destroy');
+Route::put('/storage', 'StorageController@edit')->name('storage.update');
+Route::get('/storage/metadata', 'StorageController@getMetadata')->name('storage.get-metadata');
 
